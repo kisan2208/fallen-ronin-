@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://dv31jg5hqbl61"]
+
+[ext_resource type="PackedScene" uid="uid://dn5i0vl3xuaml" path="res://Assets/main assets/final_animation.gltf" id="1_qfvig"]
+
+[node name="AuxScene2" unique_id=1054216270 instance=ExtResource("1_qfvig")]
+
+[node name="Skeleton3D" parent="AuxScene/Node" parent_id_path=PackedInt32Array(2121637401) index="0" unique_id=1644815437]
+bones/0/position = Vector3(-11.839284, 80.32293, 0.34751463)
+bones/0/rotation = Quaternion(0.012013657, -0.02754503, -0.011951441, 0.99947697)
+bones/1/rotation = Quaternion(-0.04264358, 0.10530776, 0.9933584, 0.018196998)
+bones/2/rotation = Quaternion(-0.24480365, -0.010050263, -0.044815022, 0.96848434)
+bones/3/rotation = Quaternion(0.54037577, 0.075680844, -0.014638687, 0.8378855)
+bones/4/rotation = Quaternion(0.34421209, 0.15550444, -0.05792124, 0.9241112)
+bones/5/rotation = Quaternion(-0.06498947, -0.0030649453, 0.003981525, 0.9978733)
+bones/6/rotation = Quaternion(-0.03634172, -0.006577436, 0.009364326, 0.99927396)
+bones/7/rotation = Quaternion(-0.03631656, -0.006676548, 0.009392869, 0.9992739)
+bones/8/rotation = Quaternion(0.09280532, 0.00075530924, 0.012367062, 0.9956072)
+bones/9/rotation = Quaternion(0.014646406, 0.015883677, -0.003491579, 0.99976057)
+bones/10/rotation = Quaternion(0.55180323, 0.40813377, -0.6425198, 0.34074676)
+bones/11/rotation = Quaternion(0.42784724, 0.31429318, 0.18769081, 0.8264011)
+bones/12/rotation = Quaternion(0.0007312794, -0.0042527164, 0.0073030693, 0.9999641)
+bones/13/rotation = Quaternion(0.065025836, -0.19846104, -0.085063085, 0.97424287)
+bones/14/rotation = Quaternion(0.23369515, -0.017150346, 0.034632046, 0.9715416)
+bones/15/rotation = Quaternion(-0.096811436, 5.4575503e-07, -0.13516769, 0.98608184)
+bones/16/rotation = Quaternion(-0.12491431, -0.055215023, 0.111653574, 0.9843177)
+bones/17/rotation = Quaternion(0.59468776, -0.3932503, 0.5938825, 0.3728328)
+bones/18/rotation = Quaternion(0.3873021, -0.21993743, -0.101552635, 0.88955706)
+bones/19/rotation = Quaternion(0.0002914373, 0.0043404526, -0.0028880253, 0.99998647)
+bones/20/rotation = Quaternion(0.08463055, 0.1578364, 0.044901982, 0.98280686)
+bones/21/rotation = Quaternion(0.15166672, -0.8936202, -0.1692514, 0.3870325)
+bones/22/rotation = Quaternion(0.1374447, -3.8096914e-08, 0.018052839, 0.990345)
+bones/23/rotation = Quaternion(0.020702288, 0.004510291, 0.017605975, 0.9996205)
+bones/24/rotation = Quaternion(0.044316534, 0.12970658, 0.9888564, -0.058097813)
+bones/25/rotation = Quaternion(-0.2711073, -0.065938815, 0.053625688, 0.9587895)
+bones/26/rotation = Quaternion(0.5362865, -0.08559194, -0.007835774, 0.8396484)
+bones/27/rotation = Quaternion(0.34108818, -0.15522826, 0.05721727, 0.92535895)
+
+[node name="mixamorigRightToeBase" parent="AuxScene/Node/Skeleton3D" index="0" unique_id=276801745]
+transform = Transform3D(-0.8756251, -0.47062168, -0.10860768, -0.1246688, 0.0029816926, 0.9921939, -0.46662414, 0.88233006, -0.061282754, -33.571808, 0.5851927, 7.2622538)
+
+[node name="mixamorigHead" parent="AuxScene/Node/Skeleton3D" index="1" unique_id=747525770]
+transform = Transform3D(0.9982357, -0.039080974, -0.04469692, 0.040812332, 0.9984248, 0.038501777, 0.04312183, -0.040258087, 0.9982583, -11.5376425, 124.05419, -7.024643)
+
+[node name="mixamorigLeftHandIndex3" parent="AuxScene/Node/Skeleton3D" index="2" unique_id=1248124118]
+transform = Transform3D(0.15002951, 0.08269842, -0.9852166, -0.0653315, -0.9934884, -0.093341425, -0.98652035, 0.078369655, -0.1436497, 14.61432, 61.47471, 7.057332)
+
+[node name="mixamorigRightHandIndex3" parent="AuxScene/Node/Skeleton3D" index="3" unique_id=181956091]
+transform = Transform3D(0.687734, -0.01294866, -0.72584736, 0.16629912, -0.97044444, 0.17487882, -0.7066589, -0.2409778, -0.6652542, -44.35688, 62.102085, 2.1193087)
+
+[node name="mixamorigLeftToeBase" parent="AuxScene/Node/Skeleton3D" index="4" unique_id=1679163400]
+transform = Transform3D(-0.84469086, 0.52496, 0.10447192, 0.12611327, 0.005506128, 0.99200064, 0.5201855, 0.8511091, -0.07085541, 11.987795, 0.6387491, 9.932781)

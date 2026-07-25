@@ -1,0 +1,80 @@
+[gd_scene format=3 uid="uid://dccq3aj1xosdi"]
+
+[ext_resource type="Script" uid="uid://bgktp3cof30xs" path="res://scripts/player.gd" id="1_ig7tw"]
+[ext_resource type="MeshLibrary" uid="uid://b70onwtg0ce26" path="res://Assets/tiless/tile_mapcolli.meshlib" id="2_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://83aetwpeq52k" path="res://scenes/magic.tscn" id="3_fjrip"]
+[ext_resource type="PackedScene" uid="uid://x1leyrlbnviq" path="res://scenes/playerAnimation.tscn" id="4_tuyoq"]
+[ext_resource type="Script" uid="uid://ch7fvfui4v1d3" path="res://scripts/area_3d.gd" id="5_dqkch"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_0xm2m"]
+size = Vector3(200, 1, 8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ig7tw"]
+albedo_color = Color(0.28627452, 1, 1, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_h2yge"]
+size = Vector3(56.76367, 1, 20)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1bvp3"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_lquwl"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qlg0r"]
+
+[node name="main" type="Node3D" unique_id=2144670808]
+
+[node name="Ground" type="StaticBody3D" parent="." unique_id=1571959471]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground" unique_id=1867754318]
+transform = Transform3D(0.9981699, 0, 0.060473647, -0.001426855, 0.9997216, 0.023551477, -0.06045681, -0.023594664, 0.997892, 0, 0, 0)
+mesh = SubResource("BoxMesh_0xm2m")
+surface_material_override/0 = SubResource("StandardMaterial3D_ig7tw")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground" unique_id=1506463921]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.171058, 0, 0)
+shape = SubResource("BoxShape3D_h2yge")
+
+[node name="Player" type="CharacterBody3D" parent="." unique_id=915615861 groups=["player"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4220812, 0)
+script = ExtResource("1_ig7tw")
+magic_scene = ExtResource("3_fjrip")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player" unique_id=886840717]
+shape = SubResource("CapsuleShape3D_1bvp3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player" unique_id=1748970419]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.08070791)
+visible = false
+mesh = SubResource("CapsuleMesh_lquwl")
+
+[node name="SwordArea" type="Area3D" parent="Player" unique_id=219459012]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2359047, -0.27915895, -0.40943885)
+collision_layer = 3
+collision_mask = 7
+monitoring = false
+script = ExtResource("5_dqkch")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player/SwordArea" unique_id=1491437291]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5963387, 0.61095214, 0.51511085)
+shape = SubResource("BoxShape3D_qlg0r")
+
+[node name="playerAnimation" parent="Player" unique_id=551741667 instance=ExtResource("4_tuyoq")]
+transform = Transform3D(-8.742278e-06, 0, 210.11, 0, 200, 0, -200, 0, -9.184199e-06, 0, -0.9875388, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1778839441]
+transform = Transform3D(-0.4209071, 0.9013475, 0.10202928, -0.9043499, -0.40820873, -0.12456672, -0.070628636, -0.14470121, 0.9869515, 0, 17.424072, 0)
+sky_mode = 1
+
+[node name="GridMap" type="GridMap" parent="." unique_id=48736951]
+transform = Transform3D(1.2, 0, 0, 0, -5.2453668e-08, -1.2, 0, 1.2, -5.2453668e-08, 0.53291845, -0.2630577, 0)
+mesh_library = ExtResource("2_0xm2m")
+cell_size = Vector3(1.97, 0.455, 0.005)
+data = {
+"cells": PackedInt32Array(0, 0, 917512, 0, 65535, 917512, 1, 0, 917512, 2, 65531, 917512, 3, 65522, 917512, 4, 65512, 917512, 4, 65513, 917512, 5, 65521, 917512, 4, 65388, 917512, 4, 65241, 917512, 4, 65186, 917512, 1, 65474, 917512, 1, 65395, 917512, 6, 65526, 917512, 7, 65508, 917512, 7, 65495, 917512, 7, 65293, 917512, 7, 65136, 917512, 7, 65069, 917512, 7, 64955, 917512, 5, 65488, 917512)
+}
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=588044188]
+transform = Transform3D(1, 0, 0, 0, 0.9848078, 0.1736482, 0, -0.1736482, 0.9848078, 8.552249, 5.08, 22.458239)
+current = true
+fov = 45.0
+far = 200.0
