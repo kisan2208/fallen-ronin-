@@ -28,6 +28,7 @@ var current_hp := 0
 var is_attacking := false
 var is_casting := false
 var can_cast := true
+var is_dead := false
 
 var hit_targets := []
 
@@ -49,12 +50,16 @@ func _ready():
 	if anim:
 		anim.animation_finished.connect(_on_animation_finished)
 	else:
-		push_error("playerAnimation/AnimationPlayer node not found under Player!")
+		push_error("AnimationPlayer node not found!")
 
 # =========================
 # PHYSICS
 # =========================
 func _physics_process(delta):
+
+	if is_dead:
+		move_and_slide()
+		return
 
 	# Gravity
 	if not is_on_floor():
@@ -75,7 +80,7 @@ func _physics_process(delta):
 		facing = direction
 
 		if facing > 0:
-			rotation.y = 0.0
+			rotation.y = 0
 		else:
 			rotation.y = PI
 
@@ -87,11 +92,11 @@ func _physics_process(delta):
 		velocity.y = jump_force
 
 	# Sword Attack
-	if Input.is_action_just_pressed("attack") and not is_attacking and not is_casting:
+	if Input.is_action_just_pressed("attack") and !is_attacking and !is_casting:
 		attack()
 
 	# Magic
-	if Input.is_action_just_pressed("magic") and can_cast and not is_attacking:
+	if Input.is_action_just_pressed("magic") and can_cast and !is_attacking:
 		cast_magic()
 
 	move_and_slide()
@@ -108,16 +113,24 @@ func play_anim(anim_name):
 
 	current_anim = anim_name
 
-	if anim_name == "animaton/Attack":
-		anim.play(anim_name, -1, 1.8)
-	
-	elif anim_name == "animaton/fireball":
-		anim.play(anim_name, -1, 2.5)
-		
-	else:
-		anim.play(anim_name,-1, 1.0)
+	match anim_name:
+
+		"animaton/Attack":
+			anim.play(anim_name, -1, 1.8)
+
+		"animaton/fireball":
+			anim.play(anim_name, -1, 2.5)
+
+		"animaton/dying":
+			anim.play(anim_name, -1, 1.2)
+
+		_:
+			anim.play(anim_name)
 
 func update_animation():
+
+	if is_dead:
+		return
 
 	if is_attacking:
 		return
@@ -151,7 +164,6 @@ func attack():
 
 	sword.monitoring = true
 
-	# Attack timing
 	await get_tree().create_timer(0.08).timeout
 
 	var bodies = sword.get_overlapping_bodies()
@@ -187,7 +199,6 @@ func cast_magic():
 
 	play_anim("animaton/fireball")
 
-	# Small cast delay
 	await get_tree().create_timer(0.37).timeout
 
 	var magic = magic_scene.instantiate()
@@ -196,10 +207,8 @@ func cast_magic():
 
 	get_parent().add_child(magic)
 
-	# Spawn in front of player
-	magic.global_position = global_position + Vector3(facing * 1.0, .5, 0)
+	magic.global_position = global_position + Vector3(facing * 1.0, 0.5, 0)
 
-	# Travel direction
 	magic.direction = Vector3(facing, 0, 0)
 
 	await get_tree().create_timer(magic_cooldown).timeout
@@ -211,22 +220,26 @@ func cast_magic():
 # =========================
 func _on_animation_finished(anim_name):
 
-	if anim_name == "animaton/Attack":
+	match anim_name:
 
-		is_attacking = false
+		"animaton/Attack":
+			is_attacking = false
+			current_anim = ""
 
-		current_anim = ""
+		"animaton/fireball":
+			is_casting = false
+			current_anim = ""
 
-	if anim_name == "animaton/fireball":
-
-		is_casting = false
-
-		current_anim = ""
+		"animaton/dying":
+			queue_free()
 
 # =========================
 # DAMAGE
 # =========================
 func take_damage(amount, _hit_position = Vector3.ZERO):
+
+	if is_dead:
+		return
 
 	current_hp -= amount
 
@@ -240,6 +253,17 @@ func take_damage(amount, _hit_position = Vector3.ZERO):
 # =========================
 func die():
 
-	print("PLAYER DIED")
+	if is_dead:
+		return
 
-	queue_free()
+	is_dead = true
+
+	velocity = Vector3.ZERO
+
+	is_attacking = false
+	is_casting = false
+	can_cast = false
+
+	sword.monitoring = false
+
+	play_anim("animaton/dying")
