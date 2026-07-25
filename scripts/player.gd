@@ -112,7 +112,7 @@ func play_anim(anim_name):
 		anim.play(anim_name, -1, 1.8)
 	
 	elif anim_name == "animaton/fireball":
-		anim.play(anim_name, -1, 2.0)
+		anim.play(anim_name, -1, 2.5)
 		
 	else:
 		anim.play(anim_name,-1, 1.0)
@@ -188,7 +188,7 @@ func cast_magic():
 	play_anim("animaton/fireball")
 
 	# Small cast delay
-	await get_tree().create_timer(0.15).timeout
+	await get_tree().create_timer(0.37).timeout
 
 	var magic = magic_scene.instantiate()
 
@@ -197,7 +197,7 @@ func cast_magic():
 	get_parent().add_child(magic)
 
 	# Spawn in front of player
-	magic.global_position = global_position + Vector3(facing * 1.5, 1.0, 0)
+	magic.global_position = global_position + Vector3(facing * 1.0, .5, 0)
 
 	# Travel direction
 	magic.direction = Vector3(facing, 0, 0)
