@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://b5ka0wghnui21"]
 
 [ext_resource type="Script" uid="uid://bgktp3cof30xs" path="res://scripts/player.gd" id="1_4flbx"]
-[ext_resource type="PackedScene" uid="uid://83aetwpeq52k" path="res://scenes/magic.tscn" id="2_fjrip"]
 [ext_resource type="MeshLibrary" uid="uid://b70onwtg0ce26" path="res://Assets/tiless/tile_mapcolli.meshlib" id="2_qhqgy"]
 [ext_resource type="Script" uid="uid://lf8phjafpf1j" path="res://scripts/camera_3d.gd" id="3_dqkch"]
 [ext_resource type="PackedScene" uid="uid://x1leyrlbnviq" path="res://scenes/playerAnimation.tscn" id="3_tuyoq"]
@@ -25,7 +24,6 @@ sky_mode = 1
 [node name="MC" type="CharacterBody3D" parent="." unique_id=720009995 groups=["player"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.4078, 0.62906647, 0.021303058)
 script = ExtResource("1_4flbx")
-magic_scene = ExtResource("2_fjrip")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MC" unique_id=267644570]
 shape = SubResource("CapsuleShape3D_1bvp3")

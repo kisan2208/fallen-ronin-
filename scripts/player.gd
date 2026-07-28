@@ -5,6 +5,8 @@ extends CharacterBody3D
 # =========================
 @export var speed := 6.0
 @export var jump_force := 8.0
+@export var double_jump_force := 8.5
+@export var max_jump := 2
 @export var gravity := 20.0
 
 @export var max_hp := 100
@@ -34,6 +36,7 @@ var hit_targets := []
 
 var facing := 1
 var current_anim := ""
+var jump_count := 0
 
 # =========================
 # READY
@@ -87,9 +90,28 @@ func _physics_process(delta):
 	velocity.x = direction * speed
 	velocity.z = 0
 
-	# Jump
-	if Input.is_action_just_pressed("jump") and is_on_floor():
-		velocity.y = jump_force
+	# =========================
+	# JUMP
+	# =========================
+
+	# Reset jump count when player lands
+	if is_on_floor():
+		jump_count = 0
+
+	# Jump / Double Jump
+	if Input.is_action_just_pressed("jump"):
+
+		if jump_count < max_jump:
+
+			if jump_count == 0:
+				velocity.y = jump_force
+				play_anim("animaton/jump")
+
+			else:
+				velocity.y = double_jump_force
+				play_anim("animaton/doublejump")
+
+			jump_count += 1
 
 	# Sword Attack
 	if Input.is_action_just_pressed("attack") and !is_attacking and !is_casting:
@@ -123,6 +145,9 @@ func play_anim(anim_name):
 
 		"animaton/dying":
 			anim.play(anim_name, -1, 1.2)
+			
+		"animaton/doublejump":
+			anim.play(anim_name, -1, 1.5)
 
 		_:
 			anim.play(anim_name)
@@ -139,7 +164,8 @@ func update_animation():
 		return
 
 	if not is_on_floor():
-		play_anim("animaton/jump")
+		if current_anim != "animaton/doublejump":
+			play_anim("animaton/jump")
 
 	elif abs(velocity.x) > 0.1:
 		play_anim("animaton/run")
