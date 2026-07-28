@@ -32,6 +32,9 @@ var is_casting := false
 var can_cast := true
 var is_dead := false
 
+var was_on_floor := true
+var is_landing:= false
+
 var hit_targets := []
 
 var facing := 1
@@ -70,6 +73,8 @@ func _physics_process(delta):
 
 	# Movement
 	var direction = 0
+	
+	
 
 	if Input.is_action_pressed("move_right"):
 		direction += 1
