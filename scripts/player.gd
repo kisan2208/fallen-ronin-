@@ -127,6 +127,12 @@ func _physics_process(delta):
 		cast_magic()
 
 	move_and_slide()
+	#Detect landing
+	if !was_on_floor and is_on_floor():
+		is_landing = true
+		play_anim("animaton/fall_to_land")
+		
+	was_on_floor = is_on_floor()
 
 	update_animation()
 
@@ -148,11 +154,17 @@ func play_anim(anim_name):
 		"animaton/fireball":
 			anim.play(anim_name, -1, 2.5)
 
-		"animaton/dying":
-			anim.play(anim_name, -1, 1.2)
+		"animaton/fall":
+			anim.play(anim_name)
+			
+		"animaton/fall_to_land":
+			anim.play(anim_name)
 			
 		"animaton/doublejump":
 			anim.play(anim_name, -1, 1.5)
+			
+		"animaton/dying":
+			anim.play(anim_name, -1, 1.2)
 
 		_:
 			anim.play(anim_name)
@@ -168,9 +180,19 @@ func update_animation():
 	if is_casting:
 		return
 
+	if is_landing:
+		return
 	if not is_on_floor():
-		if current_anim != "animaton/doublejump":
-			play_anim("animaton/jump")
+		
+		#Going Up
+		if velocity.y > 0:
+			
+			if current_anim !="animaton/doublejump":
+				play_anim("animaton/jump")
+				
+		#Falling 
+		else:
+			play_anim("animaton/fall")
 
 	elif abs(velocity.x) > 0.1:
 		play_anim("animaton/run")
@@ -259,6 +281,10 @@ func _on_animation_finished(anim_name):
 
 		"animaton/fireball":
 			is_casting = false
+			current_anim = ""
+			
+		"animaton/fall_to_land":
+			is_landing = false
 			current_anim = ""
 
 		"animaton/dying":
