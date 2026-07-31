@@ -100,7 +100,9 @@ func _physics_process(delta):
 	# =========================
 
 	# Reset jump count when player lands
-	if is_on_floor():
+	if !was_on_floor and is_on_floor() and velocity.y <-2.0:
+		is_landing = true
+		play_anim("animton/fall_to_land")
 		jump_count = 0
 
 	# Jump / Double Jump
