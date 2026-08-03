@@ -32,9 +32,6 @@ var is_casting := false
 var can_cast := true
 var is_dead := false
 
-var was_on_floor := true
-var is_landing:= false
-
 var hit_targets := []
 
 var facing := 1
@@ -54,6 +51,7 @@ func _ready():
 		push_error("SwordArea node not found under Player!")
 
 	if anim:
+		anim.active = true
 		anim.animation_finished.connect(_on_animation_finished)
 	else:
 		push_error("AnimationPlayer node not found!")
@@ -67,14 +65,10 @@ func _physics_process(delta):
 		move_and_slide()
 		return
 
-	# Gravity
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 
-	# Movement
 	var direction = 0
-	
-	
 
 	if Input.is_action_pressed("move_right"):
 		direction += 1
@@ -82,7 +76,6 @@ func _physics_process(delta):
 	if Input.is_action_pressed("move_left"):
 		direction -= 1
 
-	# Face direction
 	if direction != 0:
 
 		facing = direction
@@ -95,15 +88,9 @@ func _physics_process(delta):
 	velocity.x = direction * speed
 	velocity.z = 0
 
-	# =========================
-	# JUMP
-	# =========================
-
-	# Reset jump count when player lands
 	if is_on_floor():
 		jump_count = 0
 
-	# Jump / Double Jump
 	if Input.is_action_just_pressed("jump"):
 
 		if jump_count < max_jump:
@@ -118,11 +105,9 @@ func _physics_process(delta):
 
 			jump_count += 1
 
-	# Sword Attack
 	if Input.is_action_just_pressed("attack") and !is_attacking and !is_casting:
 		attack()
 
-	# Magic
 	if Input.is_action_just_pressed("magic") and can_cast and !is_attacking:
 		cast_magic()
 
@@ -135,10 +120,14 @@ func _physics_process(delta):
 # =========================
 func play_anim(anim_name):
 
+	if anim == null:
+		return
+
 	if current_anim == anim_name:
 		return
 
 	current_anim = anim_name
+	anim.active = true
 
 	match anim_name:
 
@@ -150,9 +139,12 @@ func play_anim(anim_name):
 
 		"animaton/dying":
 			anim.play(anim_name, -1, 1.2)
-			
+
 		"animaton/doublejump":
 			anim.play(anim_name, -1, 1.5)
+
+		"animaton/fall-to-land":
+			anim.play(anim_name, -1, 0.5)
 
 		_:
 			anim.play(anim_name)
@@ -169,8 +161,12 @@ func update_animation():
 		return
 
 	if not is_on_floor():
-		if current_anim != "animaton/doublejump":
-			play_anim("animaton/jump")
+
+		if velocity.y > 0:
+			if current_anim != "animaton/doublejump":
+				play_anim("animaton/jump")
+		else:
+			play_anim("animaton/fall-to-land")
 
 	elif abs(velocity.x) > 0.1:
 		play_anim("animaton/run")
