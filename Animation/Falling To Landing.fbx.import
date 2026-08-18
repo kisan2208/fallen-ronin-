@@ -41,7 +41,7 @@ _subresources={
 "animations": {
 "mixamo_com": {
 "save_to_file/enabled": true,
-"save_to_file/fallback_path": "res://Animation/FallingToLanding.anim",
+"save_to_file/fallback_path": "res://Animation/fall_to_land.anim",
 "save_to_file/keep_custom_tracks": "",
 "save_to_file/path": "uid://b7utvi0nq6xto",
 "settings/loop_mode": 1,
