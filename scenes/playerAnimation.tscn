@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://x1leyrlbnviq"]
 
 [ext_resource type="PackedScene" uid="uid://bdvpt20rv0ysg" path="res://Animation/Breathing Idle (2).fbx" id="1_p3ocu"]
-[ext_resource type="PackedScene" uid="uid://dlr6o4ogjmyy3" path="res://Assets/main assets/sword.glb" id="2_35l32"]
+[ext_resource type="PackedScene" uid="uid://b7cfikwg0vfc1" path="res://sworddemo.tscn" id="2_35l32"]
 [ext_resource type="Animation" uid="uid://u3l3icusd855" path="res://Animation/Attack.anim" id="2_pgbu3"]
 [ext_resource type="Animation" uid="uid://dlkt31cwhupd1" path="res://Animation/attack360.anim" id="3_yhsmr"]
 [ext_resource type="Animation" uid="uid://bg8b1caq26eob" path="res://Animation/attackcombo.anim" id="4_pkbja"]
@@ -296,8 +296,8 @@ transform = Transform3D(0.35820222, -0.2029797, 0.91131246, 0.20296317, -0.93580
 bone_name = "mixamorig_RightHand"
 bone_idx = 18
 
-[node name="sword" parent="Skeleton3D/BoneAttachment3D" index="0" unique_id=1034372338 instance=ExtResource("2_35l32")]
-transform = Transform3D(0.0026461296, 0.0068115317, 8.999329e-05, -0.0059276326, 0.003032382, 0.00014112273, 0.00016839887, -0.00029293157, 0.003553474, -0.00097558636, 5.304697e-05, 0.00017675268)
+[node name="sworddemo" parent="Skeleton3D/BoneAttachment3D" index="0" unique_id=689324640 instance=ExtResource("2_35l32")]
+transform = Transform3D(-6.1395345e-05, 0.0009535322, 0.00031216728, -0.0008769119, -0.00012692646, 6.226946e-05, 0.0001158993, -0.00045523146, 0.0006365062, -0.00089781196, 0.0005901812, 0.0005400847)
 
 [node name="AnimationPlayer" parent="." index="1" unique_id=940460403]
 libraries/animaton = SubResource("AnimationLibrary_fdui3")

@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://b7cfikwg0vfc1"]
+
+[ext_resource type="PackedScene" uid="uid://01vdutnbuawk" path="res://Assets/main assets/sworddemo.glb" id="1_2skec"]
+
+[node name="sworddemo" unique_id=689324640 instance=ExtResource("1_2skec")]
+
+[node name="Blue Leather Grip" parent="." index="5" unique_id=1387927466]
+transform = Transform3D(1, 0, 0, 0, 0.62923616, 0, 0, 0, 1, 0, 1.0031139, 0)
+
+[node name="Leather Wrap Band" parent="." index="6" unique_id=292377852]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.44699928, 0)
+
+[node name="Leather Wrap Band_002" parent="." index="8" unique_id=1454441264]
+transform = Transform3D(1, 0, 0, 0, 0.8947688, 0, 0, 0, 1, 0, 0.9020467, 0)
+
+[node name="Leather Wrap Band_003" parent="." index="9" unique_id=1278912596]
+transform = Transform3D(1, 0, 0, 0, 0.8947688, 0, 0, 0, 1, 0, 1.1704774, 0)
+
+[node name="Gold Pommel Collar" parent="." index="10" unique_id=1968953449]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3578825, 0)
+
+[node name="Gold Pommel" parent="." index="11" unique_id=929382606]
+transform = Transform3D(0.9, 0, 0, 0, 0.9395072, 0, 0, 0, 0.9, 0, 0.441135, 0)
