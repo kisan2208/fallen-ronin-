@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://b5d5u5btccydi"
-path="res://.godot/imported/Fall A Loop.fbx-7760c5441fdab699113bc147c3c76894.scn"
+uid="uid://n4sk1cmbbipq"
+path="res://.godot/imported/Fall A Loop (1).fbx-df4175ef63c78016392e6835b056f8bd.scn"
 
 [deps]
 
-source_file="res://Animation/Fall A Loop.fbx"
-dest_files=["res://.godot/imported/Fall A Loop.fbx-7760c5441fdab699113bc147c3c76894.scn"]
+source_file="res://Animation/Fall A Loop (1).fbx"
+dest_files=["res://.godot/imported/Fall A Loop (1).fbx-df4175ef63c78016392e6835b056f8bd.scn"]
 
 [params]
 
@@ -43,7 +43,7 @@ _subresources={
 "save_to_file/enabled": true,
 "save_to_file/fallback_path": "res://Animation/fall.anim",
 "save_to_file/keep_custom_tracks": "",
-"save_to_file/path": "uid://blm8oibtjbo0y",
+"save_to_file/path": "uid://08ijqw4c5ses",
 "settings/loop_mode": 1,
 "slice_1/end_frame": 0,
 "slice_1/loop_mode": 0,
