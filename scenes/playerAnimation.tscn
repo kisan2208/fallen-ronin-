@@ -4,7 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://b7cfikwg0vfc1" path="res://sworddemo.tscn" id="2_35l32"]
 [ext_resource type="Animation" uid="uid://u3l3icusd855" path="res://Animation/Attack.anim" id="2_pgbu3"]
 [ext_resource type="Animation" uid="uid://dlkt31cwhupd1" path="res://Animation/attack360.anim" id="3_yhsmr"]
-[ext_resource type="Animation" uid="uid://b6tfrcprw6hpg" path="res://Animation/Standing React Small From Right.anim" id="4_ghtf0"]
+[ext_resource type="Animation" uid="uid://cwqa661mrhej2" path="res://Animation/air_strike.anim" id="4_fdui3"]
+[ext_resource type="Animation" uid="uid://c01xyfa74mgf5" path="res://Animation/Standing React Small From Right.anim" id="4_ghtf0"]
 [ext_resource type="Animation" uid="uid://bg8b1caq26eob" path="res://Animation/attackcombo.anim" id="4_pkbja"]
 [ext_resource type="Animation" uid="uid://d13aj7pnxaeri" path="res://Animation/dying.anim" id="5_5gaxy"]
 [ext_resource type="Animation" uid="uid://dh7c8gfhnpep2" path="res://Animation/Sword and Shield.anim" id="5_fdui3"]
@@ -228,6 +229,7 @@ tracks/28/keys = PackedFloat32Array(0, 1, 0.0978194, -0.022222646, 0.1110465, 0.
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_fdui3"]
 _data = {
 &"Attack": ExtResource("2_pgbu3"),
+&"air_strike": ExtResource("4_fdui3"),
 &"attack2": ExtResource("5_fdui3"),
 &"attack3": ExtResource("16_d8bv0"),
 &"attack360": ExtResource("3_yhsmr"),
@@ -246,6 +248,9 @@ _data = {
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ghtf0"]
 animation = &"animaton/Attack"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_cjaby"]
+animation = &"animaton/air_strike"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_fdui3"]
 animation = &"animaton/attack2"
@@ -421,11 +426,34 @@ advance_mode = 2
 switch_mode = 2
 advance_mode = 2
 
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_fdui3"]
+xfade_time = 0.05
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_d8bv0"]
+xfade_time = 0.05
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_w3j2s"]
+xfade_time = 0.05
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_7dtqd"]
+xfade_time = 0.15
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_r5eoh"]
+xfade_time = 0.15
+switch_mode = 2
+advance_mode = 2
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_8s6lt"]
-states/End/position = Vector2(893.6, 490.4)
+states/End/position = Vector2(883.19995, 400)
 states/Start/position = Vector2(37.6, 229.59999)
 states/animaton_Attack/node = SubResource("AnimationNodeAnimation_ghtf0")
 states/animaton_Attack/position = Vector2(570, 235.68)
+states/animaton_air_strike/node = SubResource("AnimationNodeAnimation_cjaby")
+states/animaton_air_strike/position = Vector2(868.21674, 104.32)
 states/animaton_attack2/node = SubResource("AnimationNodeAnimation_fdui3")
 states/animaton_attack2/position = Vector2(734.00006, 231.68707)
 states/animaton_attack3/node = SubResource("AnimationNodeAnimation_d8bv0")
@@ -448,7 +476,8 @@ states/animaton_jump/node = SubResource("AnimationNodeAnimation_d3jl0")
 states/animaton_jump/position = Vector2(352.40002, 25.6)
 states/animaton_run/node = SubResource("AnimationNodeAnimation_h1855")
 states/animaton_run/position = Vector2(339.6, 229.73438)
-transitions = ["Start", "animaton_idle", SubResource("AnimationNodeStateMachineTransition_b881b"), "animaton_idle", "animaton_run", SubResource("AnimationNodeStateMachineTransition_6griu"), "animaton_run", "animaton_idle", SubResource("AnimationNodeStateMachineTransition_lge25"), "animaton_idle", "animaton_jump", SubResource("AnimationNodeStateMachineTransition_cjaby"), "animaton_run", "animaton_jump", SubResource("AnimationNodeStateMachineTransition_ufuq0"), "animaton_jump", "animaton_doublejump", SubResource("AnimationNodeStateMachineTransition_t4j8q"), "animaton_jump", "animaton_fall", SubResource("AnimationNodeStateMachineTransition_u0hjv"), "animaton_doublejump", "animaton_fall", SubResource("AnimationNodeStateMachineTransition_q12fw"), "animaton_fall", "animaton_fall_to_land", SubResource("AnimationNodeStateMachineTransition_vyo2q"), "animaton_fall_to_land", "animaton_idle", SubResource("AnimationNodeStateMachineTransition_btyf7"), "animaton_fall_to_land", "animaton_run", SubResource("AnimationNodeStateMachineTransition_mskbw"), "animaton_idle", "animaton_Attack", SubResource("AnimationNodeStateMachineTransition_d7p65"), "animaton_run", "animaton_Attack", SubResource("AnimationNodeStateMachineTransition_35t7a"), "animaton_Attack", "animaton_attack2", SubResource("AnimationNodeStateMachineTransition_uf3hd"), "animaton_attack2", "animaton_attack3", SubResource("AnimationNodeStateMachineTransition_giijm"), "animaton_Attack", "animaton_idle", SubResource("AnimationNodeStateMachineTransition_nehxq"), "animaton_attack2", "animaton_idle", SubResource("AnimationNodeStateMachineTransition_kpqaj"), "animaton_attack3", "animaton_idle", SubResource("AnimationNodeStateMachineTransition_qaumg"), "animaton_idle", "animaton_fireball", SubResource("AnimationNodeStateMachineTransition_8s6lt"), "animaton_run", "animaton_fireball", SubResource("AnimationNodeStateMachineTransition_fin4q"), "animaton_fireball", "animaton_idle", SubResource("AnimationNodeStateMachineTransition_elc0s"), "animaton_idle", "animaton_hurt", SubResource("AnimationNodeStateMachineTransition_w3lid"), "animaton_run", "animaton_hurt", SubResource("AnimationNodeStateMachineTransition_u0dcm"), "animaton_jump", "animaton_hurt", SubResource("AnimationNodeStateMachineTransition_ndjd1"), "animaton_fall", "animaton_hurt", SubResource("AnimationNodeStateMachineTransition_qbdiv"), "animaton_Attack", "animaton_hurt", SubResource("AnimationNodeStateMachineTransition_qdxk0"), "animaton_attack2", "animaton_hurt", SubResource("AnimationNodeStateMachineTransition_hc2gk"), "animaton_attack3", "animaton_hurt", SubResource("AnimationNodeStateMachineTransition_ij0t2"), "animaton_hurt", "animaton_idle", SubResource("AnimationNodeStateMachineTransition_j2o66"), "animaton_idle", "animaton_dying", SubResource("AnimationNodeStateMachineTransition_31uid"), "animaton_run", "animaton_dying", SubResource("AnimationNodeStateMachineTransition_lxft4"), "animaton_fall", "animaton_dying", SubResource("AnimationNodeStateMachineTransition_j43oe"), "animaton_hurt", "animaton_dying", SubResource("AnimationNodeStateMachineTransition_5rg8y"), "animaton_dying", "End", SubResource("AnimationNodeStateMachineTransition_xr6go")]
+transitions = ["Start", "animaton_idle", SubResource("AnimationNodeStateMachineTransition_b881b"), "animaton_idle", "animaton_run", SubResource("AnimationNodeStateMachineTransition_6griu"), "animaton_run", "animaton_idle", SubResource("AnimationNodeStateMachineTransition_lge25"), "animaton_idle", "animaton_jump", SubResource("AnimationNodeStateMachineTransition_cjaby"), "animaton_run", "animaton_jump", SubResource("AnimationNodeStateMachineTransition_ufuq0"), "animaton_jump", "animaton_doublejump", SubResource("AnimationNodeStateMachineTransition_t4j8q"), "animaton_jump", "animaton_fall", SubResource("AnimationNodeStateMachineTransition_u0hjv"), "animaton_doublejump", "animaton_fall", SubResource("AnimationNodeStateMachineTransition_q12fw"), "animaton_fall", "animaton_fall_to_land", SubResource("AnimationNodeStateMachineTransition_vyo2q"), "animaton_fall_to_land", "animaton_idle", SubResource("AnimationNodeStateMachineTransition_btyf7"), "animaton_fall_to_land", "animaton_run", SubResource("AnimationNodeStateMachineTransition_mskbw"), "animaton_idle", "animaton_Attack", SubResource("AnimationNodeStateMachineTransition_d7p65"), "animaton_run", "animaton_Attack", SubResource("AnimationNodeStateMachineTransition_35t7a"), "animaton_Attack", "animaton_attack2", SubResource("AnimationNodeStateMachineTransition_uf3hd"), "animaton_attack2", "animaton_attack3", SubResource("AnimationNodeStateMachineTransition_giijm"), "animaton_Attack", "animaton_idle", SubResource("AnimationNodeStateMachineTransition_nehxq"), "animaton_attack2", "animaton_idle", SubResource("AnimationNodeStateMachineTransition_kpqaj"), "animaton_attack3", "animaton_idle", SubResource("AnimationNodeStateMachineTransition_qaumg"), "animaton_idle", "animaton_fireball", SubResource("AnimationNodeStateMachineTransition_8s6lt"), "animaton_run", "animaton_fireball", SubResource("AnimationNodeStateMachineTransition_fin4q"), "animaton_fireball", "animaton_idle", SubResource("AnimationNodeStateMachineTransition_elc0s"), "animaton_idle", "animaton_hurt", SubResource("AnimationNodeStateMachineTransition_w3lid"), "animaton_run", "animaton_hurt", SubResource("AnimationNodeStateMachineTransition_u0dcm"), "animaton_jump", "animaton_hurt", SubResource("AnimationNodeStateMachineTransition_ndjd1"), "animaton_fall", "animaton_hurt", SubResource("AnimationNodeStateMachineTransition_qbdiv"), "animaton_Attack", "animaton_hurt", SubResource("AnimationNodeStateMachineTransition_qdxk0"), "animaton_attack2", "animaton_hurt", SubResource("AnimationNodeStateMachineTransition_hc2gk"), "animaton_attack3", "animaton_hurt", SubResource("AnimationNodeStateMachineTransition_ij0t2"), "animaton_hurt", "animaton_idle", SubResource("AnimationNodeStateMachineTransition_j2o66"), "animaton_idle", "animaton_dying", SubResource("AnimationNodeStateMachineTransition_31uid"), "animaton_run", "animaton_dying", SubResource("AnimationNodeStateMachineTransition_lxft4"), "animaton_fall", "animaton_dying", SubResource("AnimationNodeStateMachineTransition_j43oe"), "animaton_hurt", "animaton_dying", SubResource("AnimationNodeStateMachineTransition_5rg8y"), "animaton_dying", "End", SubResource("AnimationNodeStateMachineTransition_xr6go"), "animaton_jump", "animaton_air_strike", SubResource("AnimationNodeStateMachineTransition_fdui3"), "animaton_doublejump", "animaton_air_strike", SubResource("AnimationNodeStateMachineTransition_d8bv0"), "animaton_fall", "animaton_air_strike", SubResource("AnimationNodeStateMachineTransition_w3j2s"), "animaton_air_strike", "animaton_idle", SubResource("AnimationNodeStateMachineTransition_7dtqd"), "animaton_air_strike", "animaton_run", SubResource("AnimationNodeStateMachineTransition_r5eoh")]
+graph_offset = Vector2(27.816801, 0)
 
 [node name="playerAnimation" unique_id=551741667 instance=ExtResource("1_p3ocu")]
 transform = Transform3D(6.8944, 0, 5.785088, 0, 9, 0, -5.785088, 0, 6.8944, 0, 0, 0)
