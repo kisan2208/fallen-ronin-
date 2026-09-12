@@ -20,10 +20,11 @@ extends CharacterBody3D
 @export var attack_damages : Array[int] = [10, 15, 25]
 
 # AIR ACTIONS
-@export var air_attack_damage : int = 10
 @export var ground_slam_damage : int = 35
-@export var ground_slam_speed : float = 22.0
-@export var ground_slam_forward_speed : float = 18.0
+@export var ground_slam_speed : float = 20.0
+@export var air_strike_forward_speed : float = 5.0
+@export var air_strike_hang_time : float = 0.4 # Time hovering before dropping down
+@export var air_strike_anim_speed : float = 1.5 # Speed of the flip/wind-up animation
 
 # HURT
 @export var hurt_knockback : float = 4.0
@@ -47,7 +48,7 @@ var current_hp : int = 0
 var is_attacking : bool = false
 var is_air_attacking : bool = false
 var is_ground_slamming : bool = false
-var slam_launched : bool = false
+var is_landing : bool = false
 var is_casting : bool = false
 var can_cast : bool = true
 var is_dead : bool = false
@@ -56,6 +57,7 @@ var is_invincible : bool = false
 
 var hit_targets : Array = []
 var facing : int = 1
+var air_strike_direction : int = 1
 var current_anim : String = ""
 var jump_count : int = 0
 var coyote_timer : float = 0.0
@@ -92,11 +94,9 @@ func _ready() -> void:
 func play_anim(anim_name : String, speed_scale : float = 1.0, blend : float = 0.15) -> void:
 	if anim == null:
 		return
-
 	if not anim.has_animation(anim_name):
 		push_error("Animation not found: " + anim_name)
 		return
-
 	if current_anim == anim_name:
 		return
 
@@ -111,36 +111,37 @@ func _physics_process(delta : float) -> void:
 		move_and_slide()
 		return
 
-	# Pause in the air before launching the ground slam.
-	if is_ground_slamming:
-		if not slam_launched:
-			velocity = Vector3.ZERO
-			move_and_slide()
-			return
+	# --- GRAVITY ---
+	if not is_on_floor():
+		if is_air_attacking and not is_ground_slamming:
+			# HOVER: Temporarily disable gravity during the air strike wind-up animation
+			velocity.y = 0.0
+		else:
+			velocity.y -= gravity * delta
 
-		velocity.x = float(facing) * ground_slam_forward_speed
-		velocity.y = -ground_slam_speed
-
-	if not is_on_floor() and not is_ground_slamming:
-		velocity.y -= gravity * delta
-
+	# --- INPUT DIRECTION ---
 	var direction : int = 0
-
 	if not is_hurt:
 		if Input.is_action_pressed("move_right"):
 			direction += 1
 		if Input.is_action_pressed("move_left"):
 			direction -= 1
 
-	if direction != 0 and not is_ground_slamming:
+	if direction != 0 and not is_ground_slamming and not is_air_attacking:
 		facing = direction
 		if facing > 0:
 			rotation.y = 0.0
 		else:
 			rotation.y = PI
 
+	# --- X VELOCITY ---
 	if is_ground_slamming:
-		pass
+		# Plunging down diagonally (Slam Attack)
+		velocity.x = float(air_strike_direction) * air_strike_forward_speed
+		velocity.y = -ground_slam_speed
+	elif is_air_attacking:
+		# HOVER: Freeze horizontal movement while hanging in mid-air
+		velocity.x = 0.0
 	elif is_hurt:
 		velocity.x = move_toward(velocity.x, 0.0, speed * delta * 5.0)
 	elif is_attacking:
@@ -157,8 +158,8 @@ func _physics_process(delta : float) -> void:
 	else:
 		coyote_timer -= delta
 
-	# --- Jump ---
-	if Input.is_action_just_pressed("jump") and not is_hurt and not is_dead and not is_ground_slamming:
+	# --- JUMP ---
+	if Input.is_action_just_pressed("jump") and not is_hurt and not is_dead and not is_air_attacking and not is_ground_slamming:
 		if coyote_timer > 0.0 and jump_count == 0:
 			velocity.y = jump_force
 			play_anim("animaton/jump", 1.0, 0.1)
@@ -169,40 +170,30 @@ func _physics_process(delta : float) -> void:
 			play_anim("animaton/doublejump", 1.5, 0.1)
 			jump_count = 2
 
-	# Separate air attack action.
-	if Input.is_action_just_pressed("air_attack") and can_start_air_action():
-		start_air_attack()
-
-	# Press normal Attack in the air to ground slam.
-	if Input.is_action_just_pressed("attack") and not is_hurt and not is_casting and not is_dead:
-		if not is_on_floor():
-			start_ground_slam()
-		elif not is_attacking:
+	# --- ATTACK ---
+	if Input.is_action_just_pressed("attack") and not is_air_attacking and not is_ground_slamming and not is_hurt and not is_casting and not is_dead:
+		if not is_on_floor() and jump_count == 1 and not is_attacking and (Input.is_action_pressed("move_left") or Input.is_action_pressed("move_right")):
+			start_air_strike()
+		elif is_on_floor() and not is_attacking:
 			start_combo()
-		elif combo_window_active and combo_step < 3:
+		elif is_on_floor() and combo_window_active and combo_step < 3:
 			combo_input_queued = true
 
-	if Input.is_action_just_pressed("magic") and can_cast and not is_attacking and not is_hurt and not is_dead:
+	if Input.is_action_just_pressed("magic") and can_cast and not is_attacking and not is_air_attacking and not is_ground_slamming and not is_hurt and not is_dead:
 		cast_magic()
 
 	move_and_slide()
 
-	if is_ground_slamming and slam_launched and is_on_floor():
+	if is_ground_slamming and is_on_floor():
 		ground_slam_land()
 
 	update_animation()
-
-func can_start_action() -> bool:
-	return not is_hurt and not is_dead and not is_attacking and not is_casting and not is_ground_slamming
-
-func can_start_air_action() -> bool:
-	return not is_on_floor() and can_start_action()
 
 # =========================
 # ANIMATION UPDATE
 # =========================
 func update_animation() -> void:
-	if is_dead or is_attacking or is_casting or is_hurt or is_ground_slamming:
+	if is_dead or is_attacking or is_casting or is_hurt or is_air_attacking or is_ground_slamming or is_landing:
 		return
 
 	if not is_on_floor():
@@ -217,59 +208,52 @@ func update_animation() -> void:
 		play_anim("animaton/idle", 1.0, 0.15)
 
 # =========================
-# AIR ATTACK
+# AIR STRIKE / GROUND SLAM
 # =========================
-func start_air_attack() -> void:
-	is_attacking = true
+func start_air_strike() -> void:
+	if is_air_attacking or is_ground_slamming or is_attacking or is_dead or jump_count != 1:
+		return
+
+	var strike_dir : int = 0
+	if Input.is_action_pressed("move_right"):
+		strike_dir = 1
+	elif Input.is_action_pressed("move_left"):
+		strike_dir = -1
+
+	if strike_dir == 0:
+		strike_dir = facing
+
+	air_strike_direction = strike_dir
+	facing = air_strike_direction
+	if air_strike_direction > 0:
+		rotation.y = 0.0
+	else:
+		rotation.y = PI
+
 	is_air_attacking = true
+	jump_count = max_jump 
 	hit_targets.clear()
 
-	play_anim("animaton/Attack", 1.8, 0.05)
-
-	sword.monitoring = false
-	await get_tree().process_frame
-	sword.monitoring = true
-
-	await get_tree().create_timer(0.1).timeout
-	deal_sword_damage(air_attack_damage)
-
-	await get_tree().create_timer(0.05).timeout
-	sword.monitoring = false
-
-	is_air_attacking = false
-	is_attacking = false
-	current_anim = ""
-
-# =========================
-# GROUND SLAM
-# =========================
-func start_ground_slam() -> void:
-	if is_ground_slamming or is_attacking or is_hurt or is_dead:
-		return
-
-	is_attacking = true
-	is_ground_slamming = true
-	slam_launched = false
-	hit_targets.clear()
+	# 1. Stop mid-air to show the flip/wind-up animation
 	velocity = Vector3.ZERO
+	play_anim("animaton/air_strike", air_strike_anim_speed, 0.05)
 
-	play_anim("animaton/air_strike", 1.0, 0.05)
+	# 2. Wait for the hang time before plunging
+	await get_tree().create_timer(air_strike_hang_time).timeout
 
-	await get_tree().create_timer(0.18).timeout
-
-	if not is_ground_slamming or is_dead or is_hurt:
+	if not is_air_attacking or is_dead or is_hurt:
 		return
 
-	slam_launched = true
-	velocity.x = float(facing) * ground_slam_forward_speed
-	velocity.y = -ground_slam_speed
+	# 3. Plunge down to the ground
+	is_ground_slamming = true
 
 func ground_slam_land() -> void:
 	is_ground_slamming = false
-	slam_launched = false
+	is_air_attacking = false
+	is_landing = true
 	hit_targets.clear()
 
-	play_anim("animaton/fall_to_land", 1.5, 0.05)
+	play_anim("animaton/fall_to_land", 1.0, 0.05)
 
 	sword.monitoring = true
 	await get_tree().process_frame
@@ -277,20 +261,15 @@ func ground_slam_land() -> void:
 	sword.monitoring = false
 
 	await get_tree().create_timer(0.25).timeout
-	is_attacking = false
+	is_landing = false
 	current_anim = ""
 
 func deal_sword_damage(damage : int) -> void:
 	var bodies : Array[Node3D] = sword.get_overlapping_bodies()
-
 	for body : Node3D in bodies:
-		if body == self:
+		if body == self or body in hit_targets:
 			continue
-		if body in hit_targets:
-			continue
-
 		hit_targets.append(body)
-
 		if body.has_method("take_damage"):
 			body.take_damage(damage, global_position)
 
@@ -303,7 +282,6 @@ func start_combo() -> void:
 	combo_input_queued = false
 	combo_window_active = false
 	hit_targets.clear()
-
 	perform_attack("animaton/Attack", 1.8, 0)
 
 func perform_attack(anim_name : String, anim_speed : float, damage_index : int) -> void:
@@ -319,7 +297,6 @@ func perform_attack(anim_name : String, anim_speed : float, damage_index : int) 
 	var damage : int = 10
 	if damage_index < attack_damages.size():
 		damage = attack_damages[damage_index]
-
 	deal_sword_damage(damage)
 
 	await get_tree().create_timer(0.05).timeout
@@ -332,7 +309,6 @@ func perform_attack(anim_name : String, anim_speed : float, damage_index : int) 
 	if combo_input_queued and combo_step < 3:
 		combo_input_queued = false
 		combo_step += 1
-
 		match combo_step:
 			2:
 				perform_attack("animaton/attack2", 1.6, 1)
@@ -353,133 +329,89 @@ func end_combo() -> void:
 # =========================
 func cast_magic() -> void:
 	if magic_scene == null:
-		print("Assign magic.tscn to magic_scene!")
 		return
 
 	can_cast = false
 	is_casting = true
 	play_anim("animaton/fireball", 2.5, 0.05)
-
 	await get_tree().create_timer(0.37).timeout
 
 	var magic := magic_scene.instantiate() as Node3D
-	if magic == null:
-		push_error("magic_scene must create a Node3D!")
-		can_cast = true
-		is_casting = false
-		return
-
-	magic.set("caster", self)
-	get_parent().add_child(magic)
-
-	magic.global_position = global_position + Vector3(float(facing) * 1.0, 0.5, 0.0)
-	magic.set("direction", Vector3(float(facing), 0.0, 0.0))
+	if magic:
+		magic.set("caster", self)
+		get_parent().add_child(magic)
+		magic.global_position = global_position + Vector3(float(facing) * 1.0, 0.5, 0.0)
+		magic.set("direction", Vector3(float(facing), 0.0, 0.0))
 
 	await get_tree().create_timer(magic_cooldown).timeout
 	can_cast = true
 
 # =========================
-# HURT
+# HURT & DEATH
 # =========================
 func apply_hurt(hit_position : Vector3) -> void:
-	if is_invincible or is_dead:
-		return
-
+	if is_invincible or is_dead: return
 	is_hurt = true
 	is_invincible = true
 	is_air_attacking = false
 	is_ground_slamming = false
-	slam_launched = false
+	is_landing = false
 	is_casting = false
 	end_combo()
-
 	play_anim("animaton/hurt", 2.0, 0.05)
 
 	var knockback_dir : float = sign(global_position.x - hit_position.x)
-	if knockback_dir == 0.0:
-		knockback_dir = float(-facing)
-
+	if knockback_dir == 0.0: knockback_dir = float(-facing)
 	velocity.x = knockback_dir * hurt_knockback
 	velocity.y = hurt_knockback * 0.5
 
 	await get_tree().create_timer(0.35).timeout
 	is_hurt = false
 	current_anim = ""
-
 	invincibility_blink()
-
 	await get_tree().create_timer(invincibility_time).timeout
 	is_invincible = false
 
 func invincibility_blink() -> void:
 	for i : int in 6:
-		if not is_invincible:
-			break
-
-		if player_model:
-			player_model.visible = false
-
+		if not is_invincible: break
+		if player_model: player_model.visible = false
+		await get_tree().create_timer(0.07).timeout
+		if player_model: player_model.visible = true
 		await get_tree().create_timer(0.07).timeout
 
-		if player_model:
-			player_model.visible = true
-
-		await get_tree().create_timer(0.07).timeout
-
-# =========================
-# ANIMATION FINISHED
-# =========================
 func _on_animation_finished(anim_name : String) -> void:
 	match anim_name:
 		"animaton/Attack", "animaton/attack2", "animaton/attack3":
-			if combo_step > 0 and not combo_window_active:
-				end_combo()
-
+			if combo_step > 0 and not combo_window_active: end_combo()
 		"animaton/fireball":
 			is_casting = false
 			current_anim = ""
-
 		"animaton/hurt":
 			is_hurt = false
 			current_anim = ""
-
 		"animaton/dying":
 			queue_free()
 
-# =========================
-# DAMAGE
-# =========================
 func take_damage(amount : int, hit_position : Vector3 = Vector3.ZERO) -> void:
-	if is_dead or is_invincible:
-		return
-
+	if is_dead or is_invincible: return
 	current_hp -= amount
-	print("Player HP: ", current_hp)
-
 	if current_hp <= 0:
 		die()
 	else:
 		apply_hurt(hit_position)
 
-# =========================
-# DEATH
-# =========================
 func die() -> void:
-	if is_dead:
-		return
-
+	if is_dead: return
 	is_dead = true
 	velocity = Vector3.ZERO
-
 	is_attacking = false
 	is_air_attacking = false
 	is_ground_slamming = false
-	slam_launched = false
+	is_landing = false
 	is_casting = false
 	is_hurt = false
 	can_cast = false
-
 	end_combo()
 	sword.monitoring = false
-
 	play_anim("animaton/dying", 1.2, 0.1)
