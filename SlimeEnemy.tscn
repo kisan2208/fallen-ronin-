@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://dh55811ofc3h0"]
+
+[ext_resource type="Script" uid="uid://dwp74i0fbryo6" path="res://scripts/enemy.gd" id="1_6mlhr"]
+[ext_resource type="PackedScene" uid="uid://bpw1xnoxwhtck" path="res://models/slime.glb" id="2_i3bqh"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_f8jay"]
+radius = 0.53510755
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rvjd6"]
+
+[node name="slime" type="CharacterBody3D" unique_id=862989633]
+script = ExtResource("1_6mlhr")
+
+[node name="slime" parent="." unique_id=1413442102 instance=ExtResource("2_i3bqh")]
+transform = Transform3D(-8.742278e-08, 0, 2, 0, 2, 0, -2, 0, -8.742278e-08, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1712356694]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.013519466, 0.13598263, 0)
+shape = SubResource("SphereShape3D_f8jay")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=38543399]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=933135368]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.59241015, 0.2787286, 0)
+shape = SubResource("BoxShape3D_rvjd6")

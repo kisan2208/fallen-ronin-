@@ -1,10 +1,12 @@
 [gd_scene format=3 uid="uid://dm8bh3gmjecj3"]
 
 [ext_resource type="Script" uid="uid://dwp74i0fbryo6" path="res://scripts/enemy.gd" id="1_48uxq"]
+[ext_resource type="PackedScene" uid="uid://bpw1xnoxwhtck" path="res://models/slime.glb" id="2_md0e3"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_hbeq5"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_v8rrl"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_md0e3"]
+size = Vector3(0.79833984, 0.96417236, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7p1mj"]
 
@@ -12,13 +14,18 @@
 script = ExtResource("1_48uxq")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1341226775]
+visible = false
 mesh = SubResource("CapsuleMesh_hbeq5")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1204634477]
-shape = SubResource("CapsuleShape3D_v8rrl")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.030905455, 0.38950056, 0.12994033)
+shape = SubResource("BoxShape3D_md0e3")
 
 [node name="Area3D" type="Area3D" parent="." unique_id=579062348]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1754405390]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.59241015, 0.2787286, 0)
 shape = SubResource("BoxShape3D_7p1mj")
+
+[node name="slime" parent="." unique_id=1413442102 instance=ExtResource("2_md0e3")]
+transform = Transform3D(-7.86805e-08, 0, 1.8, 0, 1.8, 0, -1.8, 0, -7.86805e-08, -0.042623818, 0, 0)

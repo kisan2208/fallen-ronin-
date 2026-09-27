@@ -2,7 +2,8 @@
 
 [ext_resource type="Script" uid="uid://dorvwo2n8hjin" path="res://scripts/magic_projectile.gd" id="1_ghace"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_788o1"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_ghace"]
+size = Vector3(1, 1.5522461, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_0f2g5"]
 
@@ -10,7 +11,8 @@
 script = ExtResource("1_ghace")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2015806776]
-shape = SubResource("SphereShape3D_788o1")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.27612305, 0)
+shape = SubResource("BoxShape3D_ghace")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=245688885]
 mesh = SubResource("SphereMesh_0f2g5")
